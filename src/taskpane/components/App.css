@@ -1,0 +1,31 @@
+.d-flex-col {
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}
+
+.mb-16 {
+  margin-bottom:16px;
+}
+
+.mt-16 {
+  margin-top: 16px;
+}
+
+.m-8 {
+  margin: 8px;
+}
+
+.d-flex-row {
+  display: flex;
+  -ms-flex-direction: row;
+  flex-direction: row;
+}
+
+.align-items-center {
+  align-items: center;
+}
+
+.justify-content-center {
+  justify-content: center;
+}
