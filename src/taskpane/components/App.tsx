@@ -47,7 +47,7 @@ const App: React.FC<AppProps> = () => {
   const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>, data: { value: string }) => {
     console.log(event)
     setSelectedOption(data.value);
-  };
+  }; 
 
   const handleCheckboxChange = (index: number) => {
     setCheckboxOptions((prevOptions) =>
@@ -63,6 +63,62 @@ const App: React.FC<AppProps> = () => {
 
   const handleNextSlide = () => {
     setCurrentSlide((prev) => Math.min(prev + 1, 12));
+  };
+  
+  const handleSimplifySlides = async () => {
+    try {
+      await PowerPoint.run(async (context) => {
+        const slidesScope =
+          selectedOption === "all-slides"
+            ? context.presentation.slides
+            : context.presentation.getSelectedSlides();
+
+        slidesScope.load("items");
+        await context.sync();
+
+        slidesScope.items.forEach((s: any) => {
+          s.load("id,index");
+          s.shapes.load("items/id,isDecorative,textFrame/textRange/text,background/fill");
+        });
+        await context.sync();
+
+        if (!slidesScope.items || slidesScope.items.length === 0) {
+          console.log("No slides to simplify.");
+          return;
+        }
+
+        for (const slide of slidesScope.items) {
+          const slideBackground = slide.background.fill;
+          slideBackground.setSolidFill({color: "#FFFFFF"});
+
+          const texts = (slide.shapes.items || [])
+            .filter((sh: any) => !sh.isDecorative)
+            .map((sh: any) => (sh.textFrame?.textRange?.text ?? "").trim())
+            .filter((t: string) => t.length > 0);
+
+          const aggregated = texts.join("\n\n") || "(no text)";
+
+          const shapeIds = (slide.shapes.items || []).map((sh: any) => sh.id);
+          for (const sid of shapeIds) {
+            try {
+              const s = slide.shapes.getItem(sid);
+              s.delete();
+            } catch (e) {
+              // ignore delete errors for shapes that can't be removed
+            }
+          }
+          await context.sync();
+
+          const textbox = slide.shapes.addTextBox(aggregated, { left: 40, top: 40, width: 860, height: 520 });
+          textbox.textFrame.textRange.font.color = "#000000";
+          textbox.textFrame.textRange.font.name = "Calibri";
+          textbox.textFrame.autoSizeSetting = PowerPoint.ShapeAutoSize.autoSizeShapeToFitText;
+          await context.sync();
+        }
+      });
+    } catch (err) {
+      console.error("Error simplifying slides:", err);
+    }
   };
 
   return (
@@ -115,7 +171,7 @@ const App: React.FC<AppProps> = () => {
             />
           </div>
         )}
-        <Button style={{width: '100%', marginTop: '16px'}} appearance="primary">
+        <Button style={{width: '100%', marginTop: '16px'}} appearance="primary" onClick={handleSimplifySlides}>
           {selectedOption === "all-slides" ? "Convert all slides" : "Convert current slide"}
         </Button>
       </div>
