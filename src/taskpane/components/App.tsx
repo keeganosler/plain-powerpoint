@@ -43,6 +43,29 @@ const App: React.FC<AppProps> = () => {
   const styles = useStyles();
   const [selectedOption, setSelectedOption] = React.useState(radioOptions[0].value);
   const [currentSlide, setCurrentSlide] = React.useState(1);
+  const [slideCount, setSlideCount] = React.useState(0);
+
+  React.useEffect(() => {
+    PowerPoint.run(async (context) => {
+      try {
+        const slidesCount = context.presentation.slides.getCount();
+        const selected = context.presentation.getSelectedSlides();
+        selected.load("items");
+        await context.sync();
+
+        setSlideCount(slidesCount.value ?? 0);
+
+        if (selected.items && selected.items.length > 0) {
+          const s = selected.items[0];
+          s.load("index");
+          await context.sync();
+          setCurrentSlide(((s as any).index ?? 0) + 1);
+        }
+      } catch (e) {
+        console.warn(e);
+      }
+    });
+  }, []);
 
   const handleRadioChange = (event: React.ChangeEvent<HTMLInputElement>, data: { value: string }) => {
     console.log(event)
@@ -57,12 +80,63 @@ const App: React.FC<AppProps> = () => {
     );
   };
 
-  const handlePreviousSlide = () => {
-    setCurrentSlide((prev) => Math.max(prev - 1, 1));
+  const handlePreviousSlide = async () => {
+    try {
+      await PowerPoint.run(async (context) => {
+        const selected = context.presentation.getSelectedSlides();
+        selected.load("items");
+        await context.sync();
+        if (!selected.items || selected.items.length === 0) return;
+
+        const s = selected.items[0];
+        s.load("index");
+        await context.sync();
+        const currentIndex = (s as any).index ?? 0;
+        const target = Math.max(0, currentIndex - 1);
+        if (target === currentIndex) return;
+
+        const t = context.presentation.slides.getItemAt(target);
+        t.load("id");
+        await context.sync();
+        context.presentation.setSelectedSlides([t.id]);
+        await context.sync();
+
+        setCurrentSlide(target + 1);
+      });
+    } catch (e) {
+      console.error("Error navigating to previous slide:", e);
+    }
   };
 
-  const handleNextSlide = () => {
-    setCurrentSlide((prev) => Math.min(prev + 1, 12));
+  const handleNextSlide = async () => {
+    try {
+      await PowerPoint.run(async (context) => {
+        const slidesCount = context.presentation.slides.getCount();
+        const selected = context.presentation.getSelectedSlides();
+        selected.load("items");
+        await context.sync();
+        if (!selected.items || selected.items.length === 0) return;
+
+        const s = selected.items[0];
+        s.load("index");
+        await context.sync();
+        const currentIndex = (s as any).index ?? 0;
+
+        const count = slidesCount.value ?? 0;
+        const target = Math.min(count - 1, currentIndex + 1);
+        if (target === currentIndex) return;
+
+        const t = context.presentation.slides.getItemAt(target);
+        t.load("id");
+        await context.sync();
+        context.presentation.setSelectedSlides([t.id]);
+        await context.sync();
+
+        setCurrentSlide(target + 1);
+      });
+    } catch (e) {
+      console.error("Error navigating to next slide:", e);
+    }
   };
   
   const handleSimplifySlides = async () => {
@@ -72,6 +146,8 @@ const App: React.FC<AppProps> = () => {
           selectedOption === "all-slides"
             ? context.presentation.slides
             : context.presentation.getSelectedSlides();
+
+         
 
         slidesScope.load("items");
         await context.sync();
@@ -144,7 +220,7 @@ const App: React.FC<AppProps> = () => {
             Processing Mode:
           </Text>
           <div className="d-flex-col">
-            <RadioGroup onChange={handleRadioChange}>
+            <RadioGroup value={selectedOption} onChange={handleRadioChange}>
               {radioOptions.map((option, index) => (
                 <Radio key={index} label={option.label} value={option.value} />
               ))}
@@ -161,13 +237,13 @@ const App: React.FC<AppProps> = () => {
               disabled={currentSlide === 1}
             />
             <Text size={400} weight="semibold" className="m-8">
-              {`${currentSlide} of 12 slides`}
+              {`${currentSlide} of ${slideCount || "?"} slides`}
             </Text>
             <Button
               icon={<ChevronRight24Regular />}
               appearance="outline"
               onClick={handleNextSlide}
-              disabled={currentSlide === 12}
+              disabled={slideCount > 0 ? currentSlide >= slideCount : false}
             />
           </div>
         )}
