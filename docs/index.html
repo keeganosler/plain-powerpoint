@@ -3,14 +3,13 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Plain PowerPoint — Sideload & Run</title>
+    <title>Plain PowerPoint</title>
     <style>
       :root {
-        /* Theme values from src/taskpane/index.tsx (BrandVariants) */
-        --bg: #f4cfc1; /* 160 */
-        --accent: #c5613c; /* 100 */
-        --accent-dark: #502414; /* 40 */
-        --muted: #652b16; /* 50 */
+        --bg: #f4cfc1;
+        --accent: #c5613c;
+        --accent-dark: #502414;
+        --muted: #652b16;
         --card: #ffffff;
       }
 
@@ -21,80 +20,47 @@
       }
 
       body {
-        /* No background (plain white page) */
         background: #ffffff;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 48px; /* increased vertical padding for hero visibility */
+        padding: 48px;
         min-height: 100vh;
+        max-width: 1000px;
+        margin: 0 auto;
       }
 
-      .wrap {
-        width: 100%;
-      }
-
-      .hero {
-        display: block; /* single-column hero */
-        gap: 18px;
-        align-items: stretch;
-        padding-bottom: 12px;
-        text-align: center;
-      }
-
-      .gif-placeholder {
-        width: 100%;
-        height: 100px;
-        border-radius: 10px;
-        background: #f3f4f6; /* neutral placeholder */
-        display: flex;
-        align-items: center;
-        justify-content: center;
+      pre {
+        margin: 12px;
+        padding: 12px;
+        background: #f3f4f6;
         border: 1px solid rgba(0, 0, 0, 0.06);
-        color: var(--accent-dark);
-        font-weight: 600;
+        border-radius: 4px;
+        white-space: pre-wrap;
+        word-break: break-word;
       }
 
-      .section-title {
-        text-align: center;
-        margin-top: 36px;
-      }
-
-      .card-container {
-        display: flex;
-        flex-direction: row;
-        gap: 16px;
-        justify-content: space-between;
-      }
-
-      .card {
-        background: var(--card);
+      code {
+        background: #f3f4f6;
+        padding: 4px 4px;
+        border-radius: 4px;
         border: 1px solid rgba(0, 0, 0, 0.06);
-        border-radius: 10px;
-        padding: 18px;
-        box-shadow: 0 6px 20px rgba(16, 24, 40, 0.04);
-        width: 50%;
       }
 
       ol {
         padding-left: 18px;
       }
 
-      a.button {
+      a.button-link {
         display: inline-block;
         background: var(--accent);
         color: #fff;
-        padding: 10px 14px;
-        border-radius: 8px;
+        padding: 6px 24px;
+        border-radius: 4px;
         text-decoration: none;
-        margin-bottom: 16px;
       }
 
       footer {
-        margin-top: 18px;
+        margin-top: 48px;
         color: var(--muted);
-        font-size: 13px;
+        font-size: 12px;
         gap: 8px;
         text-align: center;
         display: flex;
@@ -107,95 +73,88 @@
     </style>
   </head>
   <body>
-    <main class="wrap">
+    <mai>
       <header>
-        <div class="hero">
-          <div>
-            <h1>Plain PowerPoint</h1>
-            <p>
-              Simplify slides to deterministic, plain-text-only slides — great for accessibility,
-              printing, and consistency.
-            </p>
-            <a class="button" href="../README.md">Open README.md</a>
-          </div>
-          <div class="gif-placeholder" role="img" aria-label="GIF placeholder">GIF placeholder</div>
-        </div>
+        <h1>Plain PowerPoint</h1>
+        <p>
+          Simplify slides to deterministic, plain-text-only slides — great for accessibility,
+          printing, and consistency.
+        </p>
+        <a class="button-link" href="../README.md">Open README.md</a>
       </header>
 
-      <h2 class="section-title">Quick Start Guide</h2>
-      <div class="card-container">
-        <section class="card">
-          <h3>Users</h3>
+      <h2>Quick Start Guide</h2>
+
+        <section>
           <ol>
-            <li><strong>Clone or download</strong> this repo and open it locally.</li>
             <li>
-              <strong>Sideload the add-in:</strong> follow the instructions in
-              <code>README.md</code> to load <code>manifest.xml</code> into PowerPoint (Desktop or
-              Web).
+              <strong>Download</strong> the repo:
+              <pre>git clone https://github.com/keeganosler/plain-powerpoint.git</pre>
             </li>
             <li>
-              <strong>Run the add-in:</strong> Open PowerPoint, launch the add-in and click
-              <em>Simplify slides</em>.
+              <strong>Install</strong> dependancies:
+              <pre>npm install</pre>
+            </li>
+            <li>
+              <strong>Run</strong> dev server:
+              <pre>npm run dev-server</pre>
+            </li>
+            <li>
+              <strong>Sideload into PowerPoint</strong>:
+              <ol>
+                <li>Open a PowerPoint presentation</li>
+                <li>Home -> Add-ins -> More Add-ins -> My Add-ins -> Upload My Add-in</li>
+                <li>Browse -> Select <code>/your/path/to/plain-powerpoint/manifest.xml</code></li>
+                <li>Click upload and get started with Plain PowerPoint!</li>
+              </ol>
             </li>
           </ol>
-
-          <p class="muted">
-            If you need help sideloading, see the <code>README.md</code> for platform-specific
-            instructions (Windows, Mac, Web).
-          </p>
         </section>
 
-        <section class="card">
-          <h3>Developers</h3>
-          <ol>
-            <li><strong>Install:</strong> <code>npm install</code></li>
-            <li>
-              <strong>Run dev server:</strong> <code>npm run dev-server</code> (starts local dev
-              server at port 3000 by default)
-            </li>
-            <li>
-              <strong>Start debugging / sideloading:</strong> <code>npm start</code> (uses
-              <code>manifest.xml</code>)
-            </li>
-          </ol>
+      <h2>More Info</h2>
 
-          <p class="muted">
-            Placeholders: Add animated demos to <code>docs/assets/users-demo.gif</code> and
-            <code>docs/assets/dev-demo.gif</code>. I can add sample GIFs if you'd like.
-          </p>
-        </section>
-      </div>
+      <h3>Features</h3>
+      <section>
+        <ul>
+          <li>
+            Simplifies slides to plain text objects (removes fills, images, and non-text shapes).
+          </li>
+          <li>
+            Heuristic background detection with a white-background fallback to ensure consistent
+            output.
+          </li>
+          <li>Deterministic behavior — same input → same simplified slide output.</li>
+          <li>Works on Desktop and Web (subject to host capability limitations).</li>
+        </ul>
+      </section>
 
-      <h2 class="section-title">More Info</h2>
-      <div class="card-container">
-        <section class="card">
-          <h3>Features</h3>
-          <ul>
-            <li>
-              Simplifies slides to plain text objects (removes fills, images, and non-text shapes).
-            </li>
-            <li>
-              Heuristic background detection with a white-background fallback to ensure consistent
-              output.
-            </li>
-            <li>Deterministic behavior — same input → same simplified slide output.</li>
-            <li>Works on Desktop and Web (subject to host capability limitations).</li>
-          </ul>
-        </section>
-        <section class="card">
-          <h3>Limitations</h3>
-          <ul>
-            <li>
-              May not preserve text formatting exactly (fonts, sizes, and styles are simplified).
-            </li>
-            <li>Animation, transitions and embedded media are not preserved.</li>
-            <li>
-              Host capability differences may affect background detection or image exports;
-              placeholder logic is used when exact values aren't available.
-            </li>
-          </ul>
-        </section>
-      </div>
+      <h3>Limitations</h3>
+      <section>
+        <ul>
+          <li>
+            May not preserve text formatting exactly (fonts, sizes, and styles are simplified).
+          </li>
+          <li>Animation, transitions and embedded media are not preserved.</li>
+          <li>
+            Host capability differences may affect background detection or image exports;
+            placeholder logic is used when exact values aren't available.
+          </li>
+        </ul>
+      </section>
+
+      <h3>Coming Soon</h3>
+      <section>
+        <ul>
+          <li>
+            May not preserve text formatting exactly (fonts, sizes, and styles are simplified).
+          </li>
+          <li>Animation, transitions and embedded media are not preserved.</li>
+          <li>
+            Host capability differences may affect background detection or image exports;
+            placeholder logic is used when exact values aren't available.
+          </li>
+        </ul>
+      </section>
 
       <footer>
         <div>
