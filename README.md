@@ -1,3 +1,5 @@
+docs: https://keeganosler.github.io/plain-powerpoint/
+
 # Build PowerPoint add-ins using Office Add-ins Development Kit
 
 PowerPoint add-ins are integrations built by third parties into PowerPoint by using [PowerPoint JavaScript API](https://learn.microsoft.com/en-us/office/dev/add-ins/reference/overview/powerpoint-add-ins-reference-overview) and [Office Platform capabilities](https://learn.microsoft.com/en-us/office/dev/add-ins/overview/office-add-ins).
