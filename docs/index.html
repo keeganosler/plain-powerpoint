@@ -119,11 +119,6 @@
           <li>
             Simplifies slides to plain text objects (removes fills, images, and non-text shapes).
           </li>
-          <li>
-            Heuristic background detection with a white-background fallback to ensure consistent
-            output.
-          </li>
-          <li>Deterministic behavior — same input → same simplified slide output.</li>
           <li>Works on Desktop and Web (subject to host capability limitations).</li>
         </ul>
       </section>
@@ -134,11 +129,8 @@
           <li>
             May not preserve text formatting exactly (fonts, sizes, and styles are simplified).
           </li>
-          <li>Animation, transitions and embedded media are not preserved.</li>
-          <li>
-            Host capability differences may affect background detection or image exports;
-            placeholder logic is used when exact values aren't available.
-          </li>
+          <li>Cannot simplify tables or chart elements.</li>
+          <li>Backgrounds created using built-in PowerPoint templates may not be fully removed as expected.</li>
         </ul>
       </section>
 
@@ -146,13 +138,10 @@
       <section>
         <ul>
           <li>
-            May not preserve text formatting exactly (fonts, sizes, and styles are simplified).
+            Support for light & dark mode in PowerPoint and in documentation.
           </li>
-          <li>Animation, transitions and embedded media are not preserved.</li>
-          <li>
-            Host capability differences may affect background detection or image exports;
-            placeholder logic is used when exact values aren't available.
-          </li>
+          <li>Preservation of charts and tables as-is.</li>
+          <li>Improved handling of complex slide layouts and templated designs.</li>
         </ul>
       </section>
 
